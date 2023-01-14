@@ -8,15 +8,34 @@
     ```
 
 ## Install necessary tools on local machine
-```
+kubectl:
+```bash
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+```
 
+helm:
+```bash
 curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
 sudo apt-get install apt-transport-https --yes
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
 sudo apt-get update
 sudo apt-get install helm
+```
+
+
+```bash
+(
+  set -x; cd "$(mktemp -d)" &&
+  OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
+  ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
+  KREW="krew-${OS}_${ARCH}" &&
+  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
+  tar zxvf "${KREW}.tar.gz" &&
+  ./"${KREW}" install krew
+)
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+kubectl krew
 ```
 
 ## Setup Rancher Server
@@ -98,3 +117,42 @@ helm install rancher rancher-latest/rancher \
   --set hostname=192.168.122.101.sslip.io \
   --set bootstrapPassword=admin
 ```
+
+## Setting up new cluster
+
+1. Navigate to Rancher management UI
+1. Go to cluster creation and use the switch for RKE2 
+1. Create cluster with the default settings
+1. Join nodes appropriatelly with the command given by the setup
+
+## Managing workloads on Kubernetes
+
+
+## Networking
+
+
+## Service discovery
+
+
+## Load balancing
+
+
+## Cluster management
+
+
+## Adding Storage Classes
+
+
+## Monitoring
+
+
+## Rancher cluster backup
+
+1. Navigate to Rancher management UI
+1. Go to App -> Charts
+1. Install Rancher Backups
+
+## Catalog
+
+## Rancher API
+
