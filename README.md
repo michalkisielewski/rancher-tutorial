@@ -2,10 +2,21 @@
 
 ## Useful commands
 * list VMs with IPs: 
-    ```
+    ```bash
     virsh net-list
     virsh net-dhcp-leases default
     ```
+* clean dhcp leases from VMs:
+    ```bash
+    sudo rm var/lib/libvirt/dnsmasq/virbr0.*
+    ```    
+* clone new VM:
+    ```bash
+    export NEW_VM_NAME=""
+    virt-clone --original empty --auto-clone -n $NEW_VM_NAME
+    sudo virt-sysprep -d $NEW_VM_NAME --hostname $NEW_VM_NAME --enable net-hostname,customize
+    ```
+
 
 ## Install necessary tools on local machine
 kubectl:
@@ -41,7 +52,7 @@ kubectl krew
 ## Setup Rancher Server
 * start rancher-server-X virtual machines
 * setup rancher-server-1:
-    ```
+    ```bash
     sudo su
 
     mkdir -p /etc/rancher/rke2/
@@ -52,7 +63,7 @@ kubectl krew
     systemctl start rke2-server.service
     ```
 * setup other rancher-server nodes:
-    ```
+    ```bash
     sudo su
 
     mkdir -p /etc/rancher/rke2/
@@ -67,7 +78,7 @@ kubectl krew
     For more details see docs: https://ranchermanager.docs.rancher.com/v2.6/how-to-guides/new-user-guides/kubernetes-cluster-setup/rke2-for-rancher
 
 ### Copy kubeconfig to localhost
-```
+```bash
 sudo mkdir .kube
 sudo virt-copy-out -d rancher-server-1 /etc/rancher/rke2/rke2.yaml .
 sudo mv rke2.yaml .kube/config
@@ -75,7 +86,7 @@ sudo mv rke2.yaml .kube/config
 Config from the VM contains incorrect host (localhost), so it has to be changed appriopriately.
 
 ### Verify connection to Rancher Server from localhost
-```
+```bash
 # with kubeconfig specified
 kubectl --kubeconfig rke2.yaml get pods -A
 
@@ -84,7 +95,7 @@ kubectl get pods -A
 ```
 
 ## Install Rancher
-```
+```bash
 # add Rancher helm repo
 helm repo add rancher-latest https://releases.rancher.com/server-charts/latest
 
@@ -111,7 +122,7 @@ helm install rancher rancher-latest/rancher \
 ```
 https://ranchermanager.docs.rancher.com/pages-for-subheaders/install-upgrade-on-a-kubernetes-cluster
 
-```
+```bash
 helm install rancher rancher-latest/rancher \
   --namespace cattle-system \
   --set hostname=192.168.122.101.sslip.io \
@@ -144,7 +155,14 @@ helm install rancher rancher-latest/rancher \
 
 
 ## Monitoring
+1. Navigate to Rancher management UI
+1. Go to App -> Charts
+1. Install Rancher Monitoring
 
+## Monitoring
+1. Navigate to Rancher management UI
+1. Go to App -> Charts
+1. Install Rancher Logging
 
 ## Rancher cluster backup
 
@@ -154,5 +172,16 @@ helm install rancher rancher-latest/rancher \
 
 ## Catalog
 
+
 ## Rancher API
 
+
+## Troubleshooting
+
+In some scenarios clusters created by Rancher might get stuck (eg. have no connection to Rancher Server). In this case it is not possible to remove the cluster from the UI. However, it is possible to forcefully remove such cluster:
+```bash
+kubectl get clusters.management.cattle.io  # find the cluster you want to delete 
+export CLUSTERID="c-xxxxxxxxx" # 
+kubectl patch clusters.management.cattle.io $CLUSTERID -p '{"metadata":{"finalizers":[]}}' --type=merge
+kubectl delete clusters.management.cattle.io $CLUSTERID
+```
