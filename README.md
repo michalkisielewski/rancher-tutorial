@@ -34,7 +34,7 @@ sudo apt-get update
 sudo apt-get install helm
 ```
 
-
+krew:
 ```bash
 (
   set -x; cd "$(mktemp -d)" &&
@@ -47,6 +47,18 @@ sudo apt-get install helm
 )
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 kubectl krew
+```
+
+additional tools (via krew)
+```bash
+kubectl krew install ctx
+kubectl krew install ns
+```
+
+merge kubeconfigs for kubectx:
+```bash
+KUBECONFIG=file1:file2 kubectl config view --merge --flatten > out.txt
+mv out.txt .kube/config
 ```
 
 ## Setup Rancher Server
@@ -120,14 +132,9 @@ helm install rancher rancher-latest/rancher \
   --set hostname=192.168.122.101.sslip.io \
   --set bootstrapPassword=admin
 ```
-https://ranchermanager.docs.rancher.com/pages-for-subheaders/install-upgrade-on-a-kubernetes-cluster
 
-```bash
-helm install rancher rancher-latest/rancher \
-  --namespace cattle-system \
-  --set hostname=192.168.122.101.sslip.io \
-  --set bootstrapPassword=admin
-```
+For more info look at docs:
+https://ranchermanager.docs.rancher.com/pages-for-subheaders/install-upgrade-on-a-kubernetes-cluster
 
 ## Setting up new cluster
 
@@ -146,20 +153,35 @@ helm install rancher rancher-latest/rancher \
 
 
 ## Load balancing
-
+1. Navigate to Rancher management UI
+1. Go to App -> Charts
+1. Install MetalLB
 
 ## Cluster management
 
 
-## Adding Storage Classes
+## Storage
+1. Navigate to Rancher management UI
+1. Go to App -> Charts
+1. Install Longhorn
+    Make sure `Default Storage Class` is checked in settings
+1. Do a `kubectl port-forward` do Longhorn UI
 
+Node configuration:
+- disable worker nodes (to use only storage nodes)
+- add tags for nodes
+
+Additional configuration:
+- configure backups for Longhorn (NFS or S3, where S3 can be handled by integration with Minio)
+- create snapshots & backups of volumes
 
 ## Monitoring
 1. Navigate to Rancher management UI
 1. Go to App -> Charts
 1. Install Rancher Monitoring
+1. Go to Monitoring (new menu)
 
-## Monitoring
+## Logging
 1. Navigate to Rancher management UI
 1. Go to App -> Charts
 1. Install Rancher Logging
@@ -169,6 +191,10 @@ helm install rancher rancher-latest/rancher \
 1. Navigate to Rancher management UI
 1. Go to App -> Charts
 1. Install Rancher Backups
+    Specify StorageClass as Longhorn
+1. Go to Rancher Backups (new menu)
+1. Create a backup
+
 
 ## Catalog
 
