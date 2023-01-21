@@ -175,6 +175,9 @@ Additional configuration:
 - configure backups for Longhorn (NFS or S3, where S3 can be handled by integration with Minio)
 - create snapshots & backups of volumes
 
+Setting up monitoring:
+https://longhorn.io/docs/1.4.0/monitoring/prometheus-and-grafana-setup/
+
 ## Monitoring
 1. Navigate to Rancher management UI
 1. Go to App -> Charts
