@@ -53,6 +53,10 @@ additional tools (via krew)
 ```bash
 kubectl krew install ctx
 kubectl krew install ns
+
+# set proper permissions for above:
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+sudo chown -R $(id -u):$(id -g) $HOME/.kube/
 ```
 
 merge kubeconfigs for kubectx:
