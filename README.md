@@ -147,22 +147,10 @@ https://ranchermanager.docs.rancher.com/pages-for-subheaders/install-upgrade-on-
 1. Create cluster with the default settings
 1. Join nodes appropriatelly with the command given by the setup
 
-## Managing workloads on Kubernetes
-
-
-## Networking
-
-
-## Service discovery
-
-
 ## Load balancing
 1. Navigate to Rancher management UI
 1. Go to App -> Charts
 1. Install MetalLB
-
-## Cluster management
-
 
 ## Storage
 1. Navigate to Rancher management UI
@@ -201,10 +189,6 @@ https://longhorn.io/docs/1.4.0/monitoring/prometheus-and-grafana-setup/
     Specify StorageClass as Longhorn
 1. Go to Rancher Backups (new menu)
 1. Create a backup
-
-
-## Catalog
-
 
 ## Rancher API
 

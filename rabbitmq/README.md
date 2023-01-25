@@ -15,3 +15,9 @@ echo "password: $password"
 
 kubectl port-forward "service/production-ready" 15672
 ```
+
+```
+service="$(kubectl get service production-ready -o jsonpath='{.spec.clusterIP}')"
+kubectl run perf-test --image=pivotalrabbitmq/perf-test -- --uri amqp://$username:$password@$service
+kubectl logs --follow perf-test
+```

@@ -413,7 +413,7 @@ spec:
           value: "0.0.0.0"
         resources:
           requests:
-            cpu: 200m
+            cpu: 100m
             memory: 64Mi
           limits:
             cpu: 300m
@@ -469,7 +469,7 @@ spec:
           value: "10"
         resources:
           requests:
-            cpu: 300m
+            cpu: 100m
             memory: 256Mi
           limits:
             cpu: 500m
@@ -670,7 +670,7 @@ spec:
           value: "1"
         resources:
           requests:
-            cpu: 200m
+            cpu: 100m
             memory: 180Mi
           limits:
             cpu: 300m
